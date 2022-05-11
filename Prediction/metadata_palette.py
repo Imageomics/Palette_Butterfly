@@ -34,10 +34,11 @@ def setup_model(processor='cpu'):
     Construct the model based on pretrained model COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3
     and fine tune model model_final.pth, model_final.pth should in ./output/model_final.pth
     '''
+    root_file_path = os.path.dirname(__file__)
     cfg = get_cfg()
     cfg.merge_from_file(model_zoo.get_config_file("COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x.yaml"))
     cfg.MODEL.ROI_HEADS.NUM_CLASSES = 5
-    cfg.MODEL.WEIGHTS = os.path.join(cfg.OUTPUT_DIR, "model_final.pth")  # path to the model we just trained
+    cfg.MODEL.WEIGHTS = os.path.join(root_file_path,cfg.OUTPUT_DIR, "model_final.pth")  # path to the model we just trained
     cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.7   # set a custom testing threshold
     cfg.MODEL.DEVICE = processor
     predictor = DefaultPredictor(cfg)
