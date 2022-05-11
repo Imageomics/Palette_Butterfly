@@ -1,0 +1,19 @@
+# data file #
+#############
+Data/**
+
+# Snakemake log file #
+######################
+
+.snakemake/**
+.config/**
+Prediction/.snakemake
+
+# Model and python file #
+
+.cache/**
+
+*.pyc
+*.pth
+# Container image
+*.sif

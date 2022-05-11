@@ -1,0 +1,7 @@
+{
+"ENHANCE": 1,
+"annotation_prefix" : "/home/thibault/Documents/Project/Data_test/Butterfly_palette/Color_palette/",
+"dataset_json" : "/home/thibault/Documents/Project/drexel_metadata/gen_metadata_train/config/training_data_butterfly_1.json",
+"data_prefix" : "/home/thibault/Documents/Project/Data_test/Butterfly_palette/",
+"labels": "/home/thibault/Documents/Project/Data_test/Butterfly_palette/Color_palette/labels.txt"
+}

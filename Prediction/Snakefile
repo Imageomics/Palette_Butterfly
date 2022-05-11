@@ -1,0 +1,24 @@
+# find centers of the 4 corners color palette
+#from snakemake.io import *
+import glob
+import os
+
+examples = glob_wildcards('Data/images_full_palette_square/{example}.JPG').example
+
+CSV=expand('Data/CSV/{file}.csv', file=examples)
+PRE_IMAGE = expand('Data/Pre_image/{file}.png', file=examples)
+
+rule all:
+	input:CSV
+
+rule color_palette:
+	input: 'Data/images_full_palette_square/{image}.JPG'
+	output:
+    	 csv = 'Data/CSV/{image}.csv',
+		 json = 'Data/JSON/{image}.json',
+      	 pred_image = 'Data/Pre_image/{image}.png'
+
+	singularity:
+		'library://thibaulttabarin/bgnn/detectron2_env:v1'
+
+	shell: 'python metadata_palette.py {input} {output.csv} {output.json} {output.pred_image}'
