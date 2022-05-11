@@ -3,20 +3,20 @@
 import glob
 import os
 
-examples = glob_wildcards('Data/images_full_palette_square/{example}.JPG').example
+examples = glob_wildcards('images_full_palette_square/{example}.JPG').example
 
-CSV=expand('Data/CSV/{file}.csv', file=examples)
-PRE_IMAGE = expand('Data/Pre_image/{file}.png', file=examples)
+CSV=expand('CSV/{file}.csv', file=examples)
+PRE_IMAGE = expand('Pre_image/{file}.png', file=examples)
 
 rule all:
 	input:CSV
 
 rule color_palette:
-	input: 'Data/images_full_palette_square/{image}.JPG'
+	input: 'images_full_palette_square/{image}.JPG'
 	output:
-    	 csv = 'Data/CSV/{image}.csv',
-		 json = 'Data/JSON/{image}.json',
-      	 pred_image = 'Data/Pre_image/{image}.png'
+    	 csv = 'CSV/{image}.csv',
+		 json = 'JSON/{image}.json',
+      	 pred_image = 'Pre_image/{image}.png'
 
 	singularity:
 		'library://thibaulttabarin/bgnn/detectron2_env:v1'
