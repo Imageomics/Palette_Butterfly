@@ -21,7 +21,7 @@ cp  Snakefile $TMPDIR
 cp  metadata_palette.py $TMPDIR
 cp -r .snakemake
 cp -r output $TMPDIR
-cp -r DATA_DIR $TMPDIR
+cp -r DATA_DIR/* $TMPDIR/Images
 
 DATA_DIR=$(basename $DATA_DIR)
 PARENT=$(basename $(dirname $DATA_DIR))
