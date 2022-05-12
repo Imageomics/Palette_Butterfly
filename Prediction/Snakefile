@@ -3,20 +3,22 @@
 import glob
 import os
 
-examples = glob_wildcards('images_full_palette_square/{example}.JPG').example
+DIRECTORY = config['data_dir']
+
+examples = glob_wildcards(os.path.join(DIRECTORY,'{example}.JPG')).example
 
 CSV=expand('CSV/{file}.csv', file=examples)
-PRE_IMAGE = expand('Pre_image/{file}.png', file=examples)
+PRE_IMAGE = expand('Pre_images/{file}.png', file=examples)
 
 rule all:
 	input:CSV
 
 rule color_palette:
-	input: 'images_full_palette_square/{image}.JPG'
+	input: os.path.join(DIRECTORY,'{image}.JPG')
 	output:
     	 csv = 'CSV/{image}.csv',
 		 json = 'JSON/{image}.json',
-      	 pred_image = 'Pre_image/{image}.png'
+      	 pred_image = 'Pre_images/{image}.png'
 
 	params: srcdir("metadata_palette.py")
 

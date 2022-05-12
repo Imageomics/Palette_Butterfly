@@ -1,0 +1,37 @@
+#!/bin/bash
+#SBATCH --account=PAS2136
+#SBATCH --job-name=Color Palette
+#SBATCH --time=00:10:00
+#SBATCH --ntasks=8
+
+
+# command line arguments
+DATA_DIR=$1
+# Make sure the DATA_DIR dir exists
+if [ ! -d "$DATA_DIR" ]
+then
+   echo "ERROR: Required DATA_DIR $DATA_DIR does not exist."
+   exit 1
+fi
+
+cd $SLURM_SUBMIT_DIR
+#compile
+#copy to compute node storage
+cp  Snakefile $TMPDIR
+cp  metadata_palette.py $TMPDIR
+cp -r .snakemake
+cp -r output $TMPDIR
+cp -r DATA_DIR $TMPDIR
+
+DATA_DIR=$(basename $DATA_DIR)
+PARENT=$(basename $(dirname $DATA_DIR))
+
+cd $TMPDIR
+
+#execute
+snakemake --cores 4 --use-singularity
+
+
+cp -r CVS $PARENT
+cp -r JSON $PARENT
+cp -r Pre_images $PARENT
