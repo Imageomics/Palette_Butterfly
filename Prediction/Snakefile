@@ -18,7 +18,9 @@ rule color_palette:
 		 json = 'JSON/{image}.json',
       	 pred_image = 'Pre_image/{image}.png'
 
+	params: srcdir("metadata_palette.py")
+
 	singularity:
 		'library://thibaulttabarin/bgnn/detectron2_env:v1'
 
-	shell: 'python metadata_palette.py {input} {output.csv} {output.json} {output.pred_image}'
+	shell: 'python {params} {input} {output.csv} {output.json} {output.pred_image}'
