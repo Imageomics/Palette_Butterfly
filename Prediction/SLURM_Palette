@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --account=PAS2136
 #SBATCH --job-name=segment_test
-#SBATCH --time=00:10:00
+#SBATCH --time=00:20:00
 #SBATCH --ntasks=4
 #
 # Runs Snakemake pipeline that detect the color palette in the case of buttefly

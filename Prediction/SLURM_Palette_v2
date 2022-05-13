@@ -1,12 +1,15 @@
 #!/bin/bash
 #SBATCH --account=PAS2136
-#SBATCH --job-name=Color Palette
-#SBATCH --time=00:10:00
+#SBATCH --job-name=Color_Palette
+#SBATCH --time=00:30:00
 #SBATCH --ntasks=8
 
+# Stop if a command fails (non-zero exit status)
+set -e
 
 # command line arguments
 DATA_DIR=$1
+
 # Make sure the DATA_DIR dir exists
 if [ ! -d "$DATA_DIR" ]
 then
@@ -15,23 +18,35 @@ then
 fi
 
 cd $SLURM_SUBMIT_DIR
-#compile
+
 #copy to compute node storage
 cp  Snakefile $TMPDIR
 cp  metadata_palette.py $TMPDIR
-cp -r .snakemake
+cp -r .snakemake $TMPDIR
 cp -r output $TMPDIR
-cp -r DATA_DIR/* $TMPDIR/Images
-
-DATA_DIR=$(basename $DATA_DIR)
-PARENT=$(basename $(dirname $DATA_DIR))
 
 cd $TMPDIR
+mkdir Images
+cp -r $DATA_DIR/* Images/
+
+
+PARENT=$(dirname $DATA_DIR)
+
+# Activate Snakemake environment
+module load miniconda3/4.10.3-py37
+# Activate using source per OSC instructions
+source activate snakemake
 
 #execute
-snakemake --cores 4 --use-singularity
+snakemake --cores $SLURM_NTASKS --use-singularity
 
-
-cp -r CVS $PARENT
+# Copy the snakemake ouputs to the PARENT folder 
+PARENT=$(dirname $DATA_DIR)
+cp -r CSV $PARENT
 cp -r JSON $PARENT
 cp -r Pre_images $PARENT
+
+chmod -R 774 $PARENT/CSV 
+chmod -R 774 $PARENT/JSON 
+chmod -R 774 $PARENT/Pre_images
+
