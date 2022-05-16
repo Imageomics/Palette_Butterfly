@@ -3,10 +3,9 @@
 import glob
 import os
 
-#DIRECTORY = config['data_dir']
+DIRECTORY = config['data_dir']
 
-#examples = glob_wildcards(os.path.join(DIRECTORY,'{example}.JPG')).example
-examples = glob_wildcards('Images/{example}.JPG').example
+examples = glob_wildcards(os.path.join(DIRECTORY,'Images/{example}.JPG')).example
 
 CSV=expand('CSV/{file}.csv', file=examples)
 PRE_IMAGE = expand('Pre_images/{file}.png', file=examples)
@@ -15,7 +14,7 @@ rule all:
 	input:CSV
 
 rule color_palette:
-	input: 'Images/{image}.JPG'
+	input: os.path.join(DIRECTORY,'Images/{image}.JPG')
 	output:
     	 csv = 'CSV/{image}.csv',
 		 json = 'JSON/{image}.json',

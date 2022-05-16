@@ -8,45 +8,35 @@
 set -e
 
 # command line arguments
-DATA_DIR=$1
+INPUT_DATA_DIR=$1
+OUTPUT_DATA_DIR=$2
 
-# Make sure the DATA_DIR dir exists
-if [ ! -d "$DATA_DIR" ]
+# Make sure the INPUT_DATA_DIR dir exists
+if [ ! -d "$INPUT_DATA_DIR" ]
 then
-   echo "ERROR: Required DATA_DIR $DATA_DIR does not exist."
+   echo "ERROR: Required first positional argument ($INPUT_DATA_DIR) does not exist."
    exit 1
 fi
 
-cd $SLURM_SUBMIT_DIR
-
-#copy to compute node storage
-cp  Snakefile $TMPDIR
-cp  metadata_palette.py $TMPDIR
-cp -r .snakemake $TMPDIR
-cp -r output $TMPDIR
-
-cd $TMPDIR
-mkdir Images
-cp -r $DATA_DIR/* Images/
-
-
-PARENT=$(dirname $DATA_DIR)
+# Make sure the OUTPUT_DATA_DIR has a value
+if [ -z "$OUTPUT_DATA_DIR" ]
+then
+   echo "ERROR: Required second positional argument must have a value."
+   exit 1
+fi
 
 # Activate Snakemake environment
 module load miniconda3/4.10.3-py37
 # Activate using source per OSC instructions
 source activate snakemake
 
+# Save the snakemake directory to bind into the singularity container
+BIND_DIR=$(pwd)
+
 #execute
-snakemake --cores $SLURM_NTASKS --use-singularity
-
-# Copy the snakemake ouputs to the PARENT folder 
-PARENT=$(dirname $DATA_DIR)
-cp -r CSV $PARENT
-cp -r JSON $PARENT
-cp -r Pre_images $PARENT
-
-chmod -R 774 $PARENT/CSV 
-chmod -R 774 $PARENT/JSON 
-chmod -R 774 $PARENT/Pre_images
-
+snakemake \
+    --cores $SLURM_NTASKS \
+    --use-singularity \
+    --singularity-args "--bind $BIND_DIR:$BIND_DIR" \
+    --config data_dir=$INPUT_DATA_DIR \
+    --directory $OUTPUT_DATA_DIR
